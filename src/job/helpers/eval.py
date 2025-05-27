@@ -11,8 +11,7 @@ from helpers import dataset
 
 
 def get_eval_evaluator(
-    ds: datasets.Dataset,
-    model: SentenceTransformer,
+    ds: datasets.Dataset, model: SentenceTransformer
 ) -> Result[TripletEvaluator, str]:
     """Get the evaluator for the training process."""
     logger.info("Loading evaluator")

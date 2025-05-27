@@ -14,8 +14,12 @@ def get_model() -> Result[SentenceTransformer, str]:
         return Err("Environment variable MODEL_NAME must be set")
 
     model_id = os.environ["MODEL_NAME"]
-    logger.info(f"Loading SentenceTransformer model: {model_id}")
+    model_device = os.environ.get("MODEL_DEVICE", "cpu")
+    logger.info(
+        f"Loading SentenceTransformer model: {model_id} on device: {model_device}"
+    )
     model = SentenceTransformer(
+        device=model_device,
         model_name_or_path=model_id,
         model_card_data=SentenceTransformerModelCardData(
             language="en",

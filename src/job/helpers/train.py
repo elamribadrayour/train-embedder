@@ -4,17 +4,27 @@ from loguru import logger
 from result import Ok, Result
 
 import datasets
+from transformers import TrainerCallback
 from sentence_transformers import (
+    util,
     SentenceTransformer,
     SentenceTransformerTrainer,
     SentenceTransformerTrainingArguments,
-    util,
 )
 from sentence_transformers.losses import MultipleNegativesRankingLoss
 from sentence_transformers.training_args import BatchSamplers
 from sentence_transformers.evaluation import TripletEvaluator
 
 from helpers import dataset
+
+
+def get_callbacks() -> Result[list[TrainerCallback], str]:
+    """Get the callbacks for the training process."""
+    logger.info("Loading callbacks")
+    # Add any custom callbacks here if needed
+    # The default callbacks include actually TensorBoard and CodeCarbon
+    callbacks: list[TrainerCallback] = list()
+    return Ok(callbacks)
 
 
 def get_loss(
@@ -33,7 +43,7 @@ def get_training_args() -> Result[SentenceTransformerTrainingArguments, str]:
     args = SentenceTransformerTrainingArguments(
         # Required parameter:
         output_dir="models",
-        dataloader_pin_memory=False,  # Set to False if you have a large dataset
+        dataloader_pin_memory=False,
         # training parameters (Optional)
         warmup_ratio=0.1,
         num_train_epochs=1,
@@ -57,6 +67,7 @@ def get_trainer(
     ds: datasets.Dataset,
     model: SentenceTransformer,
     evaluator: TripletEvaluator,
+    callbacks: list[TrainerCallback],
     loss: MultipleNegativesRankingLoss,
     training_args: SentenceTransformerTrainingArguments,
 ) -> Result[SentenceTransformerTrainer, str]:
@@ -70,6 +81,7 @@ def get_trainer(
         model=model,
         args=training_args,
         evaluator=evaluator,
+        callbacks=callbacks,
         eval_dataset=eval_dataset,
         train_dataset=train_dataset,
     )

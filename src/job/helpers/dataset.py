@@ -22,7 +22,7 @@ def get_train_dataset(
     ds: datasets.Dataset,
 ) -> Result[datasets.Dataset, str]:
     """Get the training dataset."""
-    logger.info("Loading training dataset")
+    logger.info("Getting training dataset")
     nb_samples = int(os.getenv("LIMIT", 0))
     if nb_samples > 0:
         logger.info(f"Limiting training dataset to {nb_samples} samples")
@@ -34,10 +34,10 @@ def get_train_dataset(
 
 
 def get_eval_dataset(ds: datasets.Dataset) -> Result[datasets.Dataset, str]:
-    logger.info("Loading eval dataset")
+    logger.info("Getting eval dataset")
     return Ok(ds["dev"])
 
 
 def get_test_dataset(ds: datasets.Dataset) -> Result[datasets.Dataset, str]:
-    logger.info("Loading test dataset")
+    logger.info("Getting test dataset")
     return Ok(ds["test"])

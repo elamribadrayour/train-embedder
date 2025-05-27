@@ -6,11 +6,15 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "accelerate>=1.7.0",
+    "codecarbon>=3.0.2",
     "datasets>=3.6.0",
     "loguru>=0.7.3",
     "python-dotenv>=1.1.0",
     "result>=0.17.0",
     "sentence-transformers>=4.1.0",
+    "tensorboardx>=2.6.2.2",
+    "torch>=2.7.0",
+    "transformers>=4.52.3",
 ]
 
 [dependency-groups]
@@ -18,7 +22,6 @@ ci = [
     "mypy>=1.15.0",
     "ruff>=0.11.11",
 ]
-
 
 [tool.mypy]
 ignore_missing_imports = true

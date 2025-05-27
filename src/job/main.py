@@ -13,6 +13,7 @@ def main() -> Result[None, str]:
     ds = dataset.get_dataset().unwrap()
 
     model = models.get_model().unwrap()
+    callbacks = train.get_callbacks().unwrap()
     loss = train.get_loss(model=model).unwrap()
     training_args = train.get_training_args().unwrap()
     evaluator = eval.get_eval_evaluator(ds=ds, model=model).unwrap()
@@ -22,6 +23,7 @@ def main() -> Result[None, str]:
         loss=loss,
         model=model,
         evaluator=evaluator,
+        callbacks=callbacks,
         training_args=training_args,
     ).unwrap()
 
