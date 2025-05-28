@@ -1,30 +1,21 @@
 """model definition for the train-embedder job."""
 
-import os
-
 from loguru import logger
-from result import Ok, Result, Err
+from result import Ok, Result
 
 from sentence_transformers import SentenceTransformer, SentenceTransformerModelCardData
 
 
-def get_model() -> Result[SentenceTransformer, str]:
+def get_model(name: str, device: str) -> Result[SentenceTransformer, str]:
     """Get the SentenceTransformer model."""
-    if "MODEL_NAME" not in os.environ:
-        return Err("Environment variable MODEL_NAME must be set")
-
-    model_id = os.environ["MODEL_NAME"]
-    model_device = os.environ.get("MODEL_DEVICE", "cpu")
-    logger.info(
-        f"Loading SentenceTransformer model: {model_id} on device: {model_device}"
-    )
+    logger.info(f"Loading SentenceTransformer model: {name} on device: {device}")
     model = SentenceTransformer(
-        device=model_device,
-        model_name_or_path=model_id,
+        device=device,
+        model_name_or_path=name,
         model_card_data=SentenceTransformerModelCardData(
             language="en",
             license="wtfpl",
-            model_name=model_id,
+            model_name=name,
             tags=["sentence-transformers", "triplet-loss", "nli", "tutorial"],
         ),
     )

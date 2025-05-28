@@ -1,17 +1,11 @@
 """dataset helpers for the job"""
 
-import os
-
 import datasets
 from loguru import logger
-from result import Ok, Result, Err
+from result import Ok, Result
 
 
-def get_dataset() -> Result[datasets.Dataset, str]:
-    if "DATASET_NAME" not in os.environ or "DATASET_PATH" not in os.environ:
-        return Err("Environment variables DATASET_NAME and DATASET_PATH must be set")
-    name = os.environ["DATASET_NAME"]
-    path = os.environ["DATASET_PATH"]
+def get_dataset(name: str, path: str) -> Result[datasets.Dataset, str]:
     dataset_id = f"{path}/{name}"
     logger.info(f"Loading dataset '{dataset_id}'")
     ds = datasets.load_dataset(path=path, name=name)
@@ -20,16 +14,11 @@ def get_dataset() -> Result[datasets.Dataset, str]:
 
 def get_train_dataset(
     ds: datasets.Dataset,
+    train_size: int,
 ) -> Result[datasets.Dataset, str]:
     """Get the training dataset."""
     logger.info("Getting training dataset")
-    nb_samples = int(os.getenv("LIMIT", 0))
-    if nb_samples > 0:
-        logger.info(f"Limiting training dataset to {nb_samples} samples")
-        ds = ds["train"].select(range(nb_samples))
-    else:
-        logger.info("Using full training dataset")
-        ds = ds["train"]
+    ds = ds["train"] if train_size == 0 else ds["train"].select(range(train_size))
     return Ok(ds)
 
 
